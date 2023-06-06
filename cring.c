@@ -145,7 +145,7 @@ CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
     if (firstbytes / CRING_BYTES(1) < toend) {
         return CFS_OK;
     }
-    secondbytes = read(fd, q->buffer + q->w, avail);
+    secondbytes = read(fd, q->buffer + q->w, CRING_BYTES(avail));
     if (secondbytes == 0) {
         /* EOF */
         return CFS_EOF;
@@ -163,7 +163,7 @@ CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
     if (count) {
         *count = (firstbytes + secondbytes) / CRING_BYTES(1);
     }
-    q->w = CRING_WRITER_CALC(q, secondbytes);
+    q->w = CRING_WRITER_CALC(q, secondbytes / CRING_BYTES(1));
     return CFS_OK;
 }
 
@@ -229,6 +229,6 @@ CRING_NAME(popwrite) (CRING_T() *q, int fd, size_t *count) {
     if (count) {
         *count = (firstbytes + secondbytes) / CRING_BYTES(1);
     }
-    q->w = CRING_READER_CALC(q, secondbytes);
+    q->w = CRING_READER_CALC(q, secondbytes / CRING_BYTES(1));
     return CFS_OK;
 }

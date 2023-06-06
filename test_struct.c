@@ -240,6 +240,7 @@ test_foobuff_readput_popwrite() {
     foobuff_put(&q, all, 2);
     lseek(infile.fd, 0, SEEK_SET);
     istrue(foobuff_readput(&q, infile.fd, &bytes) == CFS_OK);
+    eqint(4, q.w);
 
     /* Teardown */
     foobuff_deinit(&q);
